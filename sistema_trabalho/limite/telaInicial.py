@@ -17,9 +17,9 @@ class TelaInicial(TelaAbstract):
         self.__janela = sg.Window('').Layout(layout)
 
     def abrir(self):
+        botoes, valores = self.__janela.Read()
+        return botoes, valores
 
-        botoes, valores = janela.Read()
-        return botoes
-
-
+    def fechar(self):
+        self.__janela.Close()
 

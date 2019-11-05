@@ -6,6 +6,18 @@ import PySimpleGUI as sg
 
 class TelaAbstract(ABC):
 
+    def fechar(self):
+        return self.__janela.Close()
+
+    def confirmar_saida(self):
+        sg.Popup('Title',
+                 'Finalizar o programa.',
+                 sg.Submit('Sim', key=2),
+                 sg.Submit('Não', key=2))
+
+
+    #----------------------------------------------------------------------------------
+
     def imprimir(self, conteudo):
         print(conteudo)
 
@@ -43,8 +55,4 @@ class TelaAbstract(ABC):
     def pedir_matricula(self):
         return self.pedir_inteiro_valido('Digite a matrícula: ')
 
-    def confirmar_saida(self):
-        sg.Popup('Title',
-                 'Finalizar o programa.',
-                 sg.Submit('Sim', key=2),
-                 sg.Submit('Não', key=2))
+
