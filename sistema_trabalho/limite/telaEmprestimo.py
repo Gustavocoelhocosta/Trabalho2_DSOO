@@ -1,13 +1,27 @@
 from sistema_trabalho.limite.telaAbstract import TelaAbstract
+import PySimpleGUI as sg
+
 
 class TelaEmprestimo(TelaAbstract):
     def listar_opcoes(self):
-        print('Escolha dentre as opções')
-        print('0 - retirar veículo')
-        print('1 - devolver veículo')
-        print('2 - listar registros')
-        print('3 - voltar')
-        return self.pedir_inteiro_valido('digite uma opção ', [0,1,2,3], 'não é uma opção válida')
+        layout = [
+            [sg.Submit('retirar veículo', key=0)],
+            [sg.Submit('devolver veículo', key=1)],
+            [sg.Submit('listar registros', key=2)],
+            [sg.Submit('voltar', key=3)],
+        ]
+        janela = sg.Window('').Layout(layout)
+        botoes, valores = janela.Read()
+        return botoes
+
+
+    # def listar_opcoes(self):
+    #     print('Escolha dentre as opções')
+    #     print('0 - retirar veículo')
+    #     print('1 - devolver veículo')
+    #     print('2 - listar registros')
+    #     print('3 - voltar')
+    #     return self.pedir_inteiro_valido('digite uma opção ', [0,1,2,3], 'não é uma opção válida')
 
 
     def retirar_veiculo(self):

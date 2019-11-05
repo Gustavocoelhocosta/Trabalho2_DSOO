@@ -63,9 +63,9 @@ class Sistema():
         return self.__controla_funcionario
 
     def chamar_tela_inicial(self):
-        opcoes = {0: self.chamar_controla_veiculo, 1: self.chamar_controla_funcionario, 2: self.chamar_controla_emprestimo}
-        opcao = self.__tela_inicial.listar_opcoes_sistema()
-        return opcoes[opcao]()
+        opcoes = {0: self.chamar_controla_veiculo, 1: self.chamar_controla_funcionario, 2: self.chamar_controla_emprestimo, None: self.finalizar}
+        botao = self.__tela_inicial.listar_opcoes_sistema()
+        return opcoes[botao]()
 
     def chamar_controla_veiculo(self):
         self.__controla_veiculo.abrir_tela()
@@ -75,6 +75,9 @@ class Sistema():
 
     def chamar_controla_funcionario(self):
         self.__controla_funcionario.abrir_tela()
+
+    def finalizar(self):
+        return exit(0)
 
 
 s = Sistema()

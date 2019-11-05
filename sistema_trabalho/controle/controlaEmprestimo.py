@@ -26,11 +26,9 @@ class ControlaEmprestimo(ControlaAbstract):
 
     #abre a tela inicial de emprestimo
     def abrir_tela(self):
-        self.__tela_emprestimo.imprimir('----------------------------------------------------')
-        opcoes = {0: self.emprestar_veiculo, 1: self.devolver_veiculo, 2: self.listar, 3: self.voltar}
-        opcao = self.__tela_emprestimo.listar_opcoes()
-        opcoes[opcao]()
-        return self.abrir_tela()
+        opcoes = {0: self.emprestar_veiculo, 1: self.devolver_veiculo, 2: self.listar, 3: self.voltar, None: self.voltar}
+        botao = self.__tela_emprestimo.listar_opcoes()
+        opcoes[botao]()
 
     #empresta os veiculos
     def emprestar_veiculo(self):

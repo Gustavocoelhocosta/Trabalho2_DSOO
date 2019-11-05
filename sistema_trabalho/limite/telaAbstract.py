@@ -1,6 +1,7 @@
 from abc import ABC
 from sistema_trabalho.controle.Excecoes import *
 import re
+import PySimpleGUI as sg
 
 
 class TelaAbstract(ABC):
@@ -41,3 +42,9 @@ class TelaAbstract(ABC):
 
     def pedir_matricula(self):
         return self.pedir_inteiro_valido('Digite a matrícula: ')
+
+    def confirmar_saida(self):
+        sg.Popup('Title',
+                 'Finalizar o programa.',
+                 sg.Submit('Sim', key=2),
+                 sg.Submit('Não', key=2))

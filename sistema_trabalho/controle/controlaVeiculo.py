@@ -1,4 +1,4 @@
-from sistema_trabalho.limite.telaVeiculo import TelaVeiculo
+from sistema_trabalho.limite.telaVeiculo import *
 from sistema_trabalho.entidade.veiculo import Veiculo
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 from sistema_trabalho.controle.Excecoes import *
@@ -9,28 +9,27 @@ class ControlaVeiculo(ControlaAbstract):
         self.__sistema = sistema
         self.__veiculos = {}
         self.__tela_veiculo = TelaVeiculo()
+        self.__tela_incluir_veiculo = TelaIncluirVeiculo()
 
     @property
     def veiculos(self):
         return self.__veiculos
 
     def abrir_tela(self):
-        self.__tela_veiculo.imprimir('----------------------------------------------------')
-        opcoes = {0: self.incluir, 1: self.excluir, 2: self.listar, 3: self.voltar}
-        opcao = self.__tela_veiculo.listar_opcoes()
-        opcoes[opcao]()
+        opcoes = {0: self.incluir, 1: self.excluir, 3: self.listar, 2: self.alterar, 4: self.voltar, None: self.voltar}
+        botao = self.__tela_veiculo.abrir()
+        opcoes[botao]()
+        self.abrir_tela()
 
-        return self.abrir_tela()
 
     def incluir(self):
         try:
-            self.__tela_veiculo.imprimir('cadastro de novo veiculo')
-            dados_veiculo = self.__tela_veiculo.pedir_dados_veiculo()
+            dados_veiculo = self.__tela_incluir_veiculo.incluir_veiculo()
             placa = dados_veiculo[0]
             modelo = dados_veiculo[1]
             marca = dados_veiculo[2]
-            ano = dados_veiculo[3]
-            quilometragem_atual = dados_veiculo[4]
+            ano = int(dados_veiculo[3])
+            quilometragem_atual = int(dados_veiculo[4])
             if self.buscar_veiculo_placa(placa):
                 raise VeiculoJaCadastrado()
             else:
@@ -62,6 +61,9 @@ class ControlaVeiculo(ControlaAbstract):
             return self.__veiculos[placa]
         else:
             return None
+
+    def alterar(self):
+        pass
 
     def voltar(self):
         self.__sistema.chamar_tela_inicial()
