@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractclassmethod
 from sistema_trabalho.controle.Excecoes import *
 import re
 import PySimpleGUI as sg
@@ -7,7 +7,8 @@ import PySimpleGUI as sg
 class TelaAbstract(ABC):
 
     def fechar(self):
-        return self.__janela.Close()
+        pass
+
 
     def confirmar_saida(self):
         sg.Popup('Title',

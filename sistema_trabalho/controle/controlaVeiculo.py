@@ -19,50 +19,76 @@ class ControlaVeiculo(ControlaAbstract):
         return self.__veiculos
 
     def abrir_tela(self):
-        botoes, valores = self.__tela_listar_veiculo.abrir(self.__veiculos)
+        veiculos = self.__veiculos
+        botoes, valores = self.__tela_listar_veiculo.abrir(veiculos)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
                   'Voltar': self.voltar,
                   }
-        opcoes[botoes]()
+        if botoes in ['Novo', 'Voltar']:
+            opcoes[botoes]()
+        else:
+            valores = valores[0][0]
+            opcoes[botoes](valores)
+
+    def alterar(self, placa):
+        veiculo = self.__veiculos[placa]
+        dados_veículo = {
+                        'placa': veiculo.placa,
+                        'modelo': veiculo.modelo,
+                        'marca': veiculo.marca,
+                        'ano': veiculo.ano,
+                        'km': veiculo.quilometragem_atual,
+                        }
+        botoes, valores = self.__tela_incluir_veiculo.abrir(dados_veículo)
+        self.__veiculos[valores['placa']] = Veiculo(
+                                                    valores['placa'],
+                                                    valores['modelo'],
+                                                    valores['marca'],
+                                                    valores['ano'],
+                                                    valores['quilometragem_atual']
+                                                    )
         self.abrir_tela()
 
 
 
-    def incluir(self):
-        # try:
-        botao, dados_veiculo = self.__tela_incluir_veiculo.abrir()
-        print(botao)
-        print(dados_veiculo)
-        self.__veiculos[dados_veiculo['placa']] = Veiculo(
-                                         dados_veiculo['placa'],
-                                         dados_veiculo['modelo'],
-                                         dados_veiculo['marca'],
-                                         dados_veiculo['ano'],
-                                         dados_veiculo['quilometragem_atual']
-                                         )
-        self.__tela_incluir_veiculo.pop_mensagem('veiculo cadastrado com sucesso')
 
-        #     if self.buscar_veiculo_placa(placa):
-        #         raise VeiculoJaCadastrado()
-        #     else:
-        #         self.__veiculos[placa] = Veiculo(placa, modelo, marca, ano, quilometragem_atual)
-        #         return self.__tela_veiculo.imprimir('veiculo cadastrado com sucesso')
-        # except: VeiculoJaCadastrado()
-        # self.__tela_veiculo.imprimir('não foi possível incluir, veículo já cadastrado')
+    def incluir(self):
+        botao, dados_veiculo = self.__tela_incluir_veiculo.abrir()
+        if dados_veiculo['placa'] in self.__veiculos:
+            self.__tela_incluir_veiculo.pop_mensagem('veículo já cadastrado')
+        else:
+            try:
+                placa = dados_veiculo['placa']
+                modelo = dados_veiculo['modelo']
+                marca = dados_veiculo['marca']
+                ano = int(dados_veiculo['ano'])
+                km = int(dados_veiculo['quilometragem_atual'])
+                self.__veiculos[placa] = Veiculo(placa, modelo, marca, ano, km)
+                self.__tela_incluir_veiculo.pop_mensagem('veiculo cadastrado com sucesso')
+            except:
+                self.__tela_incluir_veiculo.pop_mensagem('ano e quilometragem atual devem ser números inteiros. Veículo não cadastrado')
+        self.abrir_tela()
+
 
     def excluir(self, placa):
-        if self.buscar_veiculo_placa(placa):
-            veiculo = self.buscar_veiculo_placa(placa)
-            if veiculo.emprestado:
-                self.__tela_veiculo.imprimir('veículo fora da garagem')
-            else:
-                del self.veiculos[placa]
-                self.__sistema.controla_funcionario.excluir_veiculo_funcionarios(placa)
-                self.__tela_veiculo.imprimir('veículo excluido com sucesso')
-        else:
-            self.__tela_veiculo.imprimir('veículo inexistente')
+        veiculo = self.__veiculos[placa]
+        del(self.__veiculos[placa])
+        self.__tela_incluir_veiculo.pop_mensagem('veiculo excluido com sucesso')
+        self.abrir_tela()
+
+        #
+        # if self.buscar_veiculo_placa(placa):
+        #     veiculo = self.buscar_veiculo_placa(placa)
+        #     if veiculo.emprestado:
+        #         self.__tela_veiculo.imprimir('veículo fora da garagem')
+        #     else:
+        #         del self.veiculos[placa]
+        #         self.__sistema.controla_funcionario.excluir_veiculo_funcionarios(placa)
+        #         self.__tela_veiculo.imprimir('veículo excluido com sucesso')
+        # else:
+        #     self.__tela_veiculo.imprimir('veículo inexistente')
 
     def listar(self):
         lista = self.__veiculos
@@ -73,9 +99,6 @@ class ControlaVeiculo(ControlaAbstract):
             return self.__veiculos[placa]
         else:
             return None
-
-    def alterar(self):
-        pass
 
     def voltar(self):
         self.__sistema.chamar_tela_inicial()
