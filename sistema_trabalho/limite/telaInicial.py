@@ -10,9 +10,9 @@ class TelaInicial(TelaAbstract):
 
     def configurar(self):
         layout = [
-            [sg.Submit('cadastro veículos', key=0)],
-            [sg.Submit('cadastro funcionarios', key=1)],
-            [sg.Submit('emprestimo veículos', key=2)]
+            [sg.Submit('Cadastro Veículos', key=0, size=(25,1))],
+            [sg.Submit('Cadastro Funcionários', key=1, size=(25, 1))],
+            [sg.Submit('Emprestimo Veículos', key=2, size=(25, 1))]
         ]
         self.__janela = sg.Window('').Layout(layout)
 

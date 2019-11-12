@@ -18,7 +18,6 @@ class TelaListaVeiculo(TelaAbstract):
         self.configurar(veiculos)
         self.__dados_tela = self.__janela.Read()
         botoes, valores = self.__dados_tela
-        print(botoes)
         self.__janela.Close()
         return botoes, valores
 
