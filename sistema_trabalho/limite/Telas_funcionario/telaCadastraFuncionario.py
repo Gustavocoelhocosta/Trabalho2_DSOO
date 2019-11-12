@@ -15,7 +15,7 @@ class TelaIncluirFuncionario(TelaAbstract):
             [sg.Text('Telefone', size=(18, 1)), sg.InputText(dados_funcionario['telefone'], key='telefone')],
             [sg.Text('Cargo', size=(18, 1)), sg.Radio('Diretor', dados_funcionario['cargo'], key='diretor'),
              sg.Radio('Administrativo', dados_funcionario['cargo'], key='administrativo'),
-             sg.Radio('Produção', dados_funcionario['cargo'], key='producao_teste')],
+             sg.Radio('Produção', dados_funcionario['cargo'], key='producao')],
             [sg.Button('Incluir'), sg.Cancel('Voltar')]
             ]
         self.__janela = sg.Window('', layout)
