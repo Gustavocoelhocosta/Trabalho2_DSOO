@@ -10,7 +10,7 @@ class TelaIncluirVeiculo(TelaAbstract):
     def configurar(self, dados_veiculos):
         layout = [
                 [sg.Text('Entre com os dados do veículo')],
-                [sg.Text('Placa', size=(15, 1)), sg.InputText(default_text=str(dados_veiculos['placa']), key='placa')],
+                [sg.Text('Placa', size=(15, 1)), sg.InputText(dados_veiculos['placa'], key='placa')],
                 [sg.Text('Modelo', size=(15, 1)), sg.InputText(dados_veiculos['modelo'],key='modelo')],
                 [sg.Text('Marca', size=(15, 1)), sg.InputText(dados_veiculos['marca'], key='marca')],
                 [sg.Text('Ano', size=(15, 1)), sg.InputText(str(dados_veiculos['ano']), key='ano')],
@@ -20,7 +20,7 @@ class TelaIncluirVeiculo(TelaAbstract):
         self.__janela = sg.Window('').Layout(layout)
 
     def abrir(self, dados_veiculo = None):
-        if dados_veiculo:
+        if not dados_veiculo:
             dados = {'placa': '', 'modelo': '', 'marca': '', 'ano': '', 'km': ''}
         else:
             dados = dados_veiculo

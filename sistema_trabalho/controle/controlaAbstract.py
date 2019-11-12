@@ -13,7 +13,3 @@ class ControlaAbstract(ABC):
     @abstractclassmethod
     def excluir(self):
         pass
-
-    @abstractclassmethod
-    def listar(self):
-        pass
