@@ -100,6 +100,13 @@ class ControlaFuncionario(ControlaAbstract):
         else:
             self.__tela.imprimir('Nenhum vaículo cadastrado para esse funcionário')
 
+
+
+    #preciso dessa função que busque o funcionario na DAO, retorna Funcionario
+   def chamar_funcionario(self, matricula):
+        pass
+    #----------------------------------------------------------
+
     def buscar_funcionario_matricula(self, matricula):
         if matricula in self.__funcionarios:
             return self.__funcionarios[matricula]

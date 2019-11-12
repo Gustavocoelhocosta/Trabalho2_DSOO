@@ -2,17 +2,17 @@ from sistema_trabalho.limite.telaAbstract import TelaAbstract
 import PySimpleGUI as sg
 
 
-class TelaInicial(TelaAbstract):
+class TelaDevolver(TelaAbstract):
     def __init__(self):
         self.__janela = None
         self.__dados_tela = {}
         self.configurar()
 
-    def configurar(self):
+    def configurar(self, lista=[]):
         layout = [
-            [sg.Submit('cadastro veículos', key=0, size=(30,3))],
-            [sg.Submit('cadastro funcionarios', key=1, size=(30,3))],
-            [sg.Submit('emprestimo veículos', key=2, size=(30,3))]
+            [sg.Text('placa', size=(17,1)), sg.InputText()],
+            [sg.Text('quilometragem rodada', size=(17,1)), sg.InputText()],
+            [sg.Submit('devolver', size=(12, 2))]
         ]
         self.__janela = sg.Window('').Layout(layout)
 

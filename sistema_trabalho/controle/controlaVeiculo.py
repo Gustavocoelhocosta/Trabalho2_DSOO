@@ -19,18 +19,13 @@ class ControlaVeiculo(ControlaAbstract):
         return self.__veiculo_DAO
 
     def abrir_tela(self):
-        veiculos = []
-        for veiculo in self.__veiculo_DAO.chamar_todos():
-            veiculos.append(veiculo.placa + ' - ' +
-                            veiculo.marca + ' - ' +
-                            veiculo.modelo + ' - ' +
-                            str(veiculo.ano) + ' - ' +
-                            str(veiculo.quilometragem_atual))
+        veiculos = self.listar_veiculos()
         botoes, valores = self.__tela_listar_veiculo.abrir(veiculos)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
                   'Voltar': self.voltar,
+                  None : self.voltar
                   }
         if botoes in ['Novo', 'Voltar']:
             opcoes[botoes]()
@@ -49,36 +44,43 @@ class ControlaVeiculo(ControlaAbstract):
                         'km': veiculo.quilometragem_atual,
                         }
         botoes, valores = self.__tela_incluir_veiculo.abrir(dados_veiculo)
-        if placa != valores['placa']:
-            self.__veiculo_DAO.remover(placa)
-        veiculo_alterado = Veiculo(valores['placa'],
-                          valores['modelo'],
-                          valores['marca'],
-                          valores['ano'],
-                          valores['quilometragem_atual']
-                          )
-        self.__veiculo_DAO.salvar(veiculo_alterado)
-        self.abrir_tela()
-
-
+        dados_veiculo_alterado = valores
+        try:
+            placa = self.valida_placa(dados_veiculo_alterado['placa'].upper())
+            modelo = dados_veiculo_alterado['modelo'].upper()
+            marca = dados_veiculo_alterado['marca'].upper()
+            ano = int(dados_veiculo_alterado['ano'])
+            km = int(dados_veiculo_alterado['quilometragem_atual'])
+            if not (placa and modelo and marca and ano and km):
+                raise Exception
+            if placa != valores['placa']:
+                self.__veiculo_DAO.remover(placa)
+            veiculo_alterado = Veiculo(placa, modelo, marca, ano, km)
+            self.__veiculo_DAO.salvar(veiculo_alterado)
+            self.abrir_tela()
+        except Exception:
+            self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
+            self.abrir_tela()
 
 
     def incluir(self):
         botao, dados_veiculo = self.__tela_incluir_veiculo.abrir()
-        if self.veiculo_DAO.chamar(dados_veiculo['placa']):
+        if self.veiculo_DAO.chamar(dados_veiculo['placa'].upper()):
             self.__tela_incluir_veiculo.pop_mensagem('veículo já cadastrado')
         else:
             try:
-                placa = dados_veiculo['placa']
-                modelo = dados_veiculo['modelo']
-                marca = dados_veiculo['marca']
+                placa = self.valida_placa(dados_veiculo['placa'].upper())
+                modelo = dados_veiculo['modelo'].upper()
+                marca = dados_veiculo['marca'].upper()
                 ano = int(dados_veiculo['ano'])
                 km = int(dados_veiculo['quilometragem_atual'])
+                if not(placa and modelo and marca and ano and km):
+                    raise Exception
                 veiculo = Veiculo(placa, modelo, marca, ano, km)
                 self.__veiculo_DAO.salvar(veiculo)
                 self.__tela_incluir_veiculo.pop_mensagem('veiculo cadastrado com sucesso')
-            except:
-                self.__tela_incluir_veiculo.pop_mensagem('ano e quilometragem atual devem ser números inteiros. Veículo não cadastrado')
+            except Exception:
+                self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
         self.abrir_tela()
 
 
@@ -87,6 +89,24 @@ class ControlaVeiculo(ControlaAbstract):
         self.__veiculo_DAO.remover(placa)
         self.__tela_incluir_veiculo.pop_mensagem('veiculo excluido com sucesso')
         self.abrir_tela()
+
+    def valida_placa(self, placa):
+        pafrao_placa = re.compile('^[A-Z]{3}\d{4}$')
+        if re.match(pafrao_placa, placa):
+            return placa
+        else:
+            return None
+
+    def chamar_veiculo(self, placa):
+        return self.__veiculo_DAO.chamar(placa)
+
+    def listar_veiculos(self):
+        veiculos = []
+        for veiculo in self.__veiculo_DAO.chamar_todos():
+            print(veiculo.placa)
+
+            veiculos.append(str(veiculo.placa) + ' - ' + str(veiculo.modelo) + ' - ' + str(veiculo.marca) + ' - ' + str(veiculo.ano) + ' - ' + str(veiculo.quilometragem_atual))
+        return veiculos
 
     def voltar(self):
         self.__sistema.chamar_tela_inicial()

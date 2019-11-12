@@ -16,3 +16,6 @@ class Veiculo_DAO(DAO):
 
     def excluir(self, placa):
         return super().remover(placa)
+
+    def chamar_todos(self):
+        return super().chamar_todos()

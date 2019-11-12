@@ -9,8 +9,8 @@ class TelaListaVeiculo(TelaAbstract):
     def configurar(self, veiculos):
         layout = [
             [sg.Text('veículos cadastrados')],
-            [sg.Listbox(values = veiculos, size=(60,10))],
-            [sg.Submit('Novo'),sg.Submit('Excluir'), sg.Submit('Alterar'),sg.Submit('Voltar')]
+            [sg.Listbox(values = veiculos, size=(65,10))],
+            [sg.Submit('Novo',size=(12,2)),sg.Submit('Excluir',size=(12,2)), sg.Submit('Alterar',size=(12,2)),sg.Submit('Voltar',size=(10,2))]
              ]
         self.__janela = sg.Window('').Layout(layout)
 

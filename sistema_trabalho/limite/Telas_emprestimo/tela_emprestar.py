@@ -2,21 +2,23 @@ from sistema_trabalho.limite.telaAbstract import TelaAbstract
 import PySimpleGUI as sg
 
 
-class TelaInicial(TelaAbstract):
+class TelaEmprestar(TelaAbstract):
     def __init__(self):
         self.__janela = None
         self.__dados_tela = {}
-        self.configurar()
 
-    def configurar(self):
+
+    def configurar(self, veiculos=[]):
         layout = [
-            [sg.Submit('cadastro veículos', key=0, size=(30,3))],
-            [sg.Submit('cadastro funcionarios', key=1, size=(30,3))],
-            [sg.Submit('emprestimo veículos', key=2, size=(30,3))]
+            [sg.Text('matricula'), sg.InputText(key='matricula')],
+            [sg.Text('veículos cadastrados')],
+            [sg.Listbox(values=veiculos, size=(65, 10), key='placa')],
+            [sg.Submit('emprestar', size=(12, 2))]
         ]
         self.__janela = sg.Window('').Layout(layout)
 
-    def abrir(self):
+    def abrir(self, veiculos):
+        self.configurar(veiculos)
         botoes, valores = self.__janela.Read()
         return botoes, valores
 

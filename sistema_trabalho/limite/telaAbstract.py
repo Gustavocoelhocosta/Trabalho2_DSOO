@@ -17,6 +17,8 @@ class TelaAbstract(ABC):
                  sg.Submit('Não', key=2))
 
 
+    def pop_mensagem(self,mensagem):
+        sg.Popup(mensagem)
     #----------------------------------------------------------------------------------
 
     def imprimir(self, conteudo):
