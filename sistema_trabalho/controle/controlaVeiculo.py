@@ -1,4 +1,3 @@
-from sistema_trabalho.limite.Telas_veiculo.telaVeiculo import TelaVeiculo
 from sistema_trabalho.limite.Telas_veiculo.telaCadastraoVeiculo import TelaIncluirVeiculo
 from sistema_trabalho.limite.Telas_veiculo.telaListaVeiculo import TelaListaVeiculo
 from sistema_trabalho.entidade.veiculo import Veiculo
@@ -12,7 +11,6 @@ class ControlaVeiculo(ControlaAbstract):
     def __init__(self, sistema):
         self.__sistema = sistema
         self.__veiculo_DAO = Veiculo_DAO()
-        self.__tela_veiculo = TelaVeiculo()
         self.__tela_incluir_veiculo = TelaIncluirVeiculo()
         self.__tela_listar_veiculo = TelaListaVeiculo()
 
