@@ -21,4 +21,5 @@ class TelaListaFuncionario(TelaAbstract):
         self.configurar(funcionarios)
         self.__dados_tela = self.__janela.Read()
         botoes, valores = self.__dados_tela
+        self.__janela.Close()
         return botoes, valores

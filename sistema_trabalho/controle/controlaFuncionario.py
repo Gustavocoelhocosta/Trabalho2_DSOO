@@ -9,6 +9,7 @@ class ControlaFuncionario(ControlaAbstract):
         self.__funcionarios = dict()
         self.__tela_listar_funcionarios = TelaListaFuncionario()
         self.__tela_cadastrar_funcionario = TelaIncluirFuncionario()
+        self.__cargos = ['Administrativo', 'Direção', 'Operacional', 'TI']
 
     @property
     def funcionarios(self):
@@ -21,12 +22,13 @@ class ControlaFuncionario(ControlaAbstract):
                   'Excluir': self.excluir,
                   'Alterar': self.listar,
                   'Veículos permitidos': self.cadastrar_veiculo_no_funcionario,
-                  6: self.voltar}
+                  'Voltar': self.voltar,
+                  None: self.voltar}
         opcoes[botoes]()
         return self.abrir_tela()
 
     def incluir(self):
-        botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir()
+        botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
         print(botoes, dados_funcionario)
         #if matricula in self.__funcionarios:
         #   self.__tela.imprimir('Não foi possivel cadastrar pois já existe um funcionário com essa matrícula')
