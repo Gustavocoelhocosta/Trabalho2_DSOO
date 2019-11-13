@@ -31,3 +31,6 @@ class TelaIncluirFuncionario(TelaAbstract):
 
     def pop_mensagem(self, mensagem):
         sg.Popup(mensagem)
+
+    def voltar(self):
+        self.__janela.Close()

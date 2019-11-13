@@ -1,22 +1,32 @@
 from sistema_trabalho.limite.Telas_funcionario.telaListaFuncionario import TelaListaFuncionario
 from sistema_trabalho.limite.Telas_funcionario.telaCadastraFuncionario import TelaIncluirFuncionario
 from sistema_trabalho.entidade.funcionario import Funcionario
+from sistema_trabalho.entidade.funcionarioDAO import FuncionarioDAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 
 class ControlaFuncionario(ControlaAbstract):
     def __init__(self, sistema):
         self.__sistema = sistema
-        self.__funcionarios = dict()
+        self.__funcionario_DAO = FuncionarioDAO()
         self.__tela_listar_funcionarios = TelaListaFuncionario()
         self.__tela_cadastrar_funcionario = TelaIncluirFuncionario()
         self.__cargos = ['Administrativo', 'Direção', 'Operacional', 'TI']
 
     @property
-    def funcionarios(self):
-        return self.__funcionarios
+    def funcionarios_DAO(self):
+        return self.__funcionario_DAO
 
     def abrir_tela(self):
-        botoes, valores = self.__tela_listar_funcionarios.abrir(self.__funcionarios)
+        funcionarios = list()
+        for funcionario in self.__funcionario_DAO.chamar_todos():
+            funcionarios.append(
+                str(funcionario.matricula) + ' - ' +
+                funcionario.nome + ' - ' +
+                str(funcionario.data_de_nascimento) + ' - ' +
+                str(funcionario.telefone) + ' - ' +
+                funcionario.cargo
+                )
+        botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
         print(botoes, valores)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
@@ -24,28 +34,48 @@ class ControlaFuncionario(ControlaAbstract):
                   'Veículos permitidos': self.cadastrar_veiculo_no_funcionario,
                   'Voltar': self.voltar,
                   None: self.voltar}
-        opcoes[botoes]()
-        return self.abrir_tela()
+        if botoes in ['Alterar', 'Excluir', 'Veículos permitidos']:
+            opcoes[botoes](valores)
+        else:
+            opcoes[botoes]()
+            self.abrir_tela()
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
         print(botoes, dados_funcionario)
+        if self.__funcionario_DAO.chamar(int(dados_funcionario['matricula'])):
+            self.__tela_cadastrar_funcionario.pop_mensagem('Já existe um funcionário com a matrícula digitada')
+        else:
+            try:
+                matricula = int(dados_funcionario['matricula'])
+                if dados_funcionario['nome'] is not '' and dados_funcionario['matricula'] is not ' ':
+                    nome = dados_funcionario['nome'].capitalize()
+                if dados_funcionario['nascimento'].isdigit() and dados_funcionario['telefone'].isdigit():
+                    nascimento = dados_funcionario['nascimento']
+                    telefone = dados_funcionario['telefone']
+                cargo = dados_funcionario['cargo']
+                self.__funcionario_DAO.salvar(Funcionario(matricula, nome, nascimento, telefone, cargo))
+                self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário cadastrado com sucesso!')
+            except:
+                self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
+                self.abrir_tela()
+
+    def alterar(self, funcionario):
+        pass
+
+
         #if matricula in self.__funcionarios:
         #   self.__tela.imprimir('Não foi possivel cadastrar pois já existe um funcionário com essa matrícula')
         #else:
         #   self.__funcionarios[matricula] = Funcionario(matricula, nome, data_de_nascimento, telefone, cargo)
         #    self.__tela.imprimir('Funcionário cadastrado com sucesso!')
 
-    def excluir(self):
-        funcionarios = self.__funcionarios
-        for funcionario in funcionarios:
-            print('%s - %s' % (funcionarios[funcionario].matricula, funcionarios[funcionario].nome))
-        matricula = self.__tela.pedir_matricula()
-        if matricula in self.__funcionarios:
-            del (self.__funcionarios[matricula])
-            self.__tela.imprimir('Funcionário exclído com sucesso')
-        else:
-            self.__tela.imprimir('Não foi possível excluir, matrícula inválida')
+    def excluir(self, dados):
+        matricula = dados[0][0].split(' ')
+        print(type(matricula[0]))
+        self.__funcionario_DAO.remover(int(matricula[0]))
+        self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário excluído com sucesso!')
+        self.abrir_tela()
 
     def listar(self):
         self.__tela.listar_funcionarios(self.__funcionarios)
