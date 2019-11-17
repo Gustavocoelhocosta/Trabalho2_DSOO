@@ -46,7 +46,8 @@ class ControlaFuncionario(ControlaAbstract):
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
-        if dados_funcionario['matricula'] == '':
+        if dados_funcionario['matricula'] == '' or not dados_funcionario['matricula'].isdigit():
+            self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
             self.abrir_tela()
         elif self.__funcionario_DAO.chamar(int(dados_funcionario['matricula'])):
             self.__tela_cadastrar_funcionario.pop_mensagem('Já existe um funcionário com a matrícula digitada')
@@ -84,9 +85,10 @@ class ControlaFuncionario(ControlaAbstract):
     def veiculos_funcionario(self, dados):
         funcionario = self.__funcionario_DAO.chamar(self.retorna_matricula(dados))
         botoes, valores = self.__tela_veiculos_permitidos.abrir(funcionario.veiculos)
+        print(botoes, valores)
         opcoes = {'Novo': self.cadastrar_veiculo_no_funcionario,
                   'Excluir': self.excluir_veiculo_do_funcionario,
-                  'Voltar': self.abrir_tela()}
+                  'Voltar': self.abrir_tela}
         if botoes == 'Novo':
             opcoes[botoes](funcionario.matricula)
             self.abrir_tela()
