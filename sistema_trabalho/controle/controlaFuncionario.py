@@ -59,7 +59,8 @@ class ControlaFuncionario(ControlaAbstract):
                 if dados_funcionario['nascimento'].isdigit() and dados_funcionario['telefone'].isdigit():
                     nascimento = dados_funcionario['nascimento']
                     telefone = dados_funcionario['telefone']
-                cargo = dados_funcionario['cargo']
+                if dados_funcionario['cargo'] in self.__cargos:
+                    cargo = dados_funcionario['cargo']
                 self.__funcionario_DAO.salvar(Funcionario(matricula, nome, nascimento, telefone, cargo))
                 self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário cadastrado com sucesso!')
             except:
@@ -77,19 +78,26 @@ class ControlaFuncionario(ControlaAbstract):
                  'cargo': funcionario.cargo
                  }
         botoes, valores = self.__tela_cadastrar_funcionario.abrir(dados, self.__cargos)
+
         if botoes == 'Incluir':
-            self.__funcionario_DAO.remover(matricula)
-            self.__funcionario_DAO.salvar(Funcionario(int(valores['matricula']),
-                                                      valores['nome'],
-                                                      valores['nascimento'],
-                                                      valores['telefone'],
-                                                      valores['cargo'])
-                                          )
-            funcionario_alterado = self.__funcionario_DAO.chamar(matricula)
-            funcionario_alterado.veiculos = veiculos_permitidos
-            self.__funcionario_DAO.salvar(funcionario_alterado)
-            self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário alterado com sucesso')
-            self.abrir_tela()
+            try:
+                matricula_alterada = int(valores['matricula'])
+                if valores['nome'] is not '' and valores['matricula'] is not ' ':
+                    nome = valores['nome'].capitalize()
+                if valores['nascimento'].isdigit() and valores['telefone'].isdigit():
+                    nascimento = valores['nascimento']
+                    telefone = valores['telefone']
+                if valores['cargo'] in self.__cargos:
+                    cargo = valores['cargo']
+                self.__funcionario_DAO.remover(matricula)
+                self.__funcionario_DAO.salvar(Funcionario(matricula_alterada, nome, nascimento, telefone, cargo))
+                funcionario_alterado = self.__funcionario_DAO.chamar(matricula_alterada)
+                funcionario_alterado.veiculos = veiculos_permitidos
+                self.__funcionario_DAO.salvar(funcionario_alterado)
+                self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário alterado com sucesso!')
+            except:
+                self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não alterado!')
+                self.abrir_tela()
 
 
     def excluir(self, dados):

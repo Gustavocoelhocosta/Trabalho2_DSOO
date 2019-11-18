@@ -13,7 +13,7 @@ class TelaIncluirFuncionario(TelaAbstract):
             [sg.Text('Nome', size=(18,1)), sg.InputText(dados_funcionario['nome'], key='nome')],
             [sg.Text('Data de nascimento', size=(18, 1)), sg.InputText(dados_funcionario['nascimento'], key='nascimento')],
             [sg.Text('Telefone', size=(18, 1)), sg.InputText(dados_funcionario['telefone'], key='telefone')],
-            [sg.Text('Cargo', size=(18, 1)), sg.Combo(size=(18, 1), values= cargos, key='cargo')],
+            [sg.Text('Cargo', size=(18, 1)), sg.Combo(size=(18, 1),default_value=dados_funcionario['cargo'], values= cargos, key='cargo')],
             [sg.Button('Incluir'), sg.Cancel('Voltar')]
             ]
         self.__janela = sg.Window('', layout)
