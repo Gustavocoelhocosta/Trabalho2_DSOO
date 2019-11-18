@@ -111,5 +111,15 @@ class ControlaVeiculo(ControlaAbstract):
     def voltar(self):
         self.__sistema.chamar_tela_inicial()
 
+    def listar_veiculos(self):
+        veiculos = list()
+        for veiculo in self.__veiculo_DAO.chamar_todos():
+            veiculos.append(veiculo.placa + ' - ' +
+                            veiculo.marca + ' - ' +
+                            veiculo.modelo + ' - ' +
+                            str(veiculo.ano) + ' - ' +
+                            str(veiculo.quilometragem_atual))
+        return veiculos
 
-
+    def retorna_veiculo_pela_placa(self, placa):
+        self.__veiculo_DAO.chamar(placa)

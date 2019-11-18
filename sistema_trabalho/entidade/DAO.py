@@ -30,6 +30,7 @@ class DAO(ABC):
     def remover(self, key):
         try:
             del(self.__object_cache[key])
+            self.__dump()
         except KeyError:
             return None
 

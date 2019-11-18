@@ -8,7 +8,6 @@ class TelaListaFuncionario(TelaAbstract):
         self.__dados_tela = dict()
 
     def configurar(self, funcionarios):
-
         layout = [
             [sg.Text('Funcionários cadastrados')],
             [sg.Listbox(values=funcionarios, size=(60, 10))],
@@ -21,4 +20,5 @@ class TelaListaFuncionario(TelaAbstract):
         self.configurar(funcionarios)
         self.__dados_tela = self.__janela.Read()
         botoes, valores = self.__dados_tela
+        self.__janela.Close()
         return botoes, valores
