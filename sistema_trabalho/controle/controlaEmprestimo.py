@@ -48,20 +48,25 @@ class ControlaEmprestimo(ControlaAbstract):
 
     #abre a tela inicial de emprestimo
     def abrir_tela(self):
-        opcoes = {0: self.emprestar_veiculo,
-                  1: self.devolver_veiculo,
-                  2: self.registros,
-                  3: self.voltar,
-                  None: self.voltar}
+        opcoes = {'emprestar': self.emprestar_veiculo,
+                  'devolver': self.devolver_veiculo,
+                  'registros': self.registros,
+                  'voltar': self.voltar,
+                  None: self.voltar
+                  }
         botao, valores = self.__tela_emprestimo.abrir()
+        print(botao)
         opcoes[botao]()
-        self.abrir_tela()
 
     # empresta os veiculos
     def emprestar_veiculo(self):
         veiculos = self.__sistema.controla_veiculo.listar_veiculos()
         botoes, valores = self.__tela_emprestar.abrir(veiculos)
-        matricula = int(valores['m'])
+        try:
+            matricula = int(valores['m'])
+        except:
+            self.__tela_emprestar.pop_mensagem('matricula deve ser um inteiro')
+            self.emprestar_veiculo()
         placa = valores['p'][0][0:7]
         print(placa)
         print(matricula)
@@ -143,11 +148,4 @@ class ControlaEmprestimo(ControlaAbstract):
         #     self.__tela_emprestimo.listar_registros(registros_filtrados)
 
     def voltar(self):
-        self.__sistema.chamar_tela_inicial()
-
-    def validar_veiculo(self, placa):
-        if placa in self.__sistema.controla_veiculo.veiculos:
-            return placa
-        else:
-            print('Veículo não cadastrado')
-            return self.validar_veiculo(self.__tela_emprestimo.pedir_placa())
+        return self.__sistema.chamar_tela_inicial()

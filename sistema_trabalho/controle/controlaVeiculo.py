@@ -27,7 +27,7 @@ class ControlaVeiculo(ControlaAbstract):
                   'Voltar': self.voltar,
                   None : self.voltar
                   }
-        if botoes in ['Novo', 'Voltar']:
+        if botoes in ['Novo', 'Voltar', None]:
             opcoes[botoes]()
         else:
             valores = valores[0][0]
@@ -103,20 +103,8 @@ class ControlaVeiculo(ControlaAbstract):
     def listar_veiculos(self):
         veiculos = []
         for veiculo in self.__veiculo_DAO.chamar_todos():
-            print(veiculo.placa)
-
             veiculos.append(str(veiculo.placa) + ' - ' + str(veiculo.modelo) + ' - ' + str(veiculo.marca) + ' - ' + str(veiculo.ano) + ' - ' + str(veiculo.quilometragem_atual))
         return veiculos
 
     def voltar(self):
-        self.__sistema.chamar_tela_inicial()
-
-    def listar_veiculos(self):
-        veiculos = list()
-        for veiculo in self.__veiculo_DAO.chamar_todos():
-            veiculos.append(veiculo.placa + ' - ' +
-                            veiculo.marca + ' - ' +
-                            veiculo.modelo + ' - ' +
-                            str(veiculo.ano) + ' - ' +
-                            str(veiculo.quilometragem_atual))
-        return veiculos
+        return self.__sistema.chamar_tela_inicial()

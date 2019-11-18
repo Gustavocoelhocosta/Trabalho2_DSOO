@@ -27,7 +27,10 @@ class Sistema():
         return self.__controla_funcionario
 
     def chamar_tela_inicial(self):
-        opcoes = {0: self.chamar_controla_veiculo, 1: self.chamar_controla_funcionario, 2: self.chamar_controla_emprestimo, None: self.finalizar}
+        opcoes = {'cadastro veículos': self.chamar_controla_veiculo,
+                  'cadastro funcionarios': self.chamar_controla_funcionario,
+                  'emprestimo veículos': self.chamar_controla_emprestimo,
+                  None: self.finalizar}
         botao, valores = self.__tela_inicial.abrir()
         return opcoes[botao]()
 
