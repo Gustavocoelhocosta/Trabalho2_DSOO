@@ -22,6 +22,10 @@ class Funcionario():
     def veiculos(self):
         return self.__veiculos
 
+    @veiculos.setter
+    def veiculos(self, veiculos):
+        self.__veiculos = veiculos
+
     @property
     def matricula(self):
         return self.__matricula

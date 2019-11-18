@@ -33,7 +33,7 @@ class ControlaFuncionario(ControlaAbstract):
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
-                  'Alterar': self.listar,
+                  'Alterar': self.alterar,
                   'Veículos permitidos': self.veiculos_funcionario,
                   'Voltar': self.voltar,
                   None: self.voltar}
@@ -66,13 +66,31 @@ class ControlaFuncionario(ControlaAbstract):
                 self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
                 self.abrir_tela()
 
-    def alterar(self, funcionario):
-        pass
-        #if matricula in self.__funcionarios:
-        #   self.__tela.imprimir('Não foi possivel cadastrar pois já existe um funcionário com essa matrícula')
-        #else:
-        #   self.__funcionarios[matricula] = Funcionario(matricula, nome, data_de_nascimento, telefone, cargo)
-        #    self.__tela.imprimir('Funcionário cadastrado com sucesso!')
+    def alterar(self, dados):
+        matricula = self.retorna_matricula(dados)
+        funcionario = self.__funcionario_DAO.chamar(matricula)
+        veiculos_permitidos = funcionario.veiculos
+        dados = {'matricula': funcionario.matricula,
+                 'nome': funcionario.nome,
+                 'nascimento': funcionario.data_de_nascimento,
+                 'telefone': funcionario.telefone,
+                 'cargo': funcionario.cargo
+                 }
+        botoes, valores = self.__tela_cadastrar_funcionario.abrir(dados, self.__cargos)
+        if botoes == 'Incluir':
+            self.__funcionario_DAO.remover(matricula)
+            self.__funcionario_DAO.salvar(Funcionario(int(valores['matricula']),
+                                                      valores['nome'],
+                                                      valores['nascimento'],
+                                                      valores['telefone'],
+                                                      valores['cargo'])
+                                          )
+            funcionario_alterado = self.__funcionario_DAO.chamar(matricula)
+            funcionario_alterado.veiculos = veiculos_permitidos
+            self.__funcionario_DAO.salvar(funcionario_alterado)
+            self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário alterado com sucesso')
+            self.abrir_tela()
+
 
     def excluir(self, dados):
         self.__funcionario_DAO.remover(self.retorna_matricula(dados))
