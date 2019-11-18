@@ -1,5 +1,5 @@
 from abc import ABC, abstractclassmethod
-from sistema_trabalho.controle.Excecoes import *
+# from sistema_trabalho.controle.Excecoes import *
 import re
 import PySimpleGUI as sg
 

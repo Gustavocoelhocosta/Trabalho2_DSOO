@@ -4,7 +4,7 @@ from sistema_trabalho.entidade.veiculo import Veiculo
 from sistema_trabalho.entidade.veiculoDAO import Veiculo_DAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 import re
-from sistema_trabalho.controle.Excecoes import *
+# from sistema_trabalho.controle.Excecoes import *
 
 
 class ControlaVeiculo(ControlaAbstract):
@@ -120,6 +120,3 @@ class ControlaVeiculo(ControlaAbstract):
                             str(veiculo.ano) + ' - ' +
                             str(veiculo.quilometragem_atual))
         return veiculos
-
-    def retorna_veiculo_pela_placa(self, placa):
-        self.__veiculo_DAO.chamar(placa)

@@ -6,6 +6,7 @@ from sistema_trabalho.limite.Telas_emprestimo.tela_registro_filtros import TelaR
 from sistema_trabalho.limite.Telas_emprestimo.tela_registro_lista import TelaRegistroLista
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 from sistema_trabalho.entidade.registroDAO import Registro_DAO
+from sistema_trabalho.controle.Excecoes import *
 
 class ControlaEmprestimo(ControlaAbstract):
     def __init__(self, sistema):
@@ -56,41 +57,38 @@ class ControlaEmprestimo(ControlaAbstract):
         opcoes[botao]()
         self.abrir_tela()
 
-    #empresta os veiculos
+    # empresta os veiculos
     def emprestar_veiculo(self):
         veiculos = self.__sistema.controla_veiculo.listar_veiculos()
         botoes, valores = self.__tela_emprestar.abrir(veiculos)
-        try:
-            if self.__sistema.controla_veiculo.chamar_veiculo(valores[placa]):
-                veiculo = self.__sistema.controla_veiculo.chamar_veiculo(valores[placa])
-            else:
-                self.__tela_emprestar.pop_mensagem('veiculo não existe')
-                raise Exception
-            if self.__sistema.ccontrola_funcionario.chamar_funcionario(valores[matricula]):
-                funcionario = self.__sistema.ccontrola_funcionario.chamar_funcionario(valores[matricula]
+        matricula = int(valores['m'])
+        placa = valores['p'][0][0:7]
+        print(placa)
+        print(matricula)
+        if self.__sistema.controla_veiculo.chamar_veiculo(placa):
+            veiculo = self.__sistema.controla_veiculo.chamar_veiculo(placa)
+            if self.__sistema.controla_funcionario.chamar_funcionario(matricula):
+                funcionario = self.__sistema.ccontrola_funcionario.chamar_funcionario(matricula)
+                if veiculo.emprestado:
+                    self.registrar(veiculo, funcionario, 3)
+                    self.__tela_emprestar.pop_mensagem('veículo indisponível')
+                if funcionario.bloqueio > 3:
+                    self.registrar(veiculo, funcionario, 4)
+                    self.__tela_emprestar.pop_mensagem('Acesso Bloqueado')  # raise erro
+                if funcionario.cargo == 'DIRETOR' or veiculo in funcionario.veiculos.values():
+                    veiculo.emprestado = True
+                    self.registrar(veiculo, funcionario, 0)
+                    self.__tela_emprestar.pop_mensagem('Acesso permitido ao veiculo')
+                else:
+                    self.registrar(veiculo, funcionario, 2)
+                    funcionario.bloqueio += 1
+                    self.__tela_emprestar.pop_mensagem('Não possui acesso ao veículo')
             else:
                 self.registrar(veiculo, None, 1)
-                self.__tela_emprestar.pop_mensagem('Matrícula não existe') #raise erro
-                raise Exception
-
-            if veiculo.emprestado:
-                self.registrar(veiculo, funcionario, 3)
-                self.__tela_emprestar.pop_mensagem('veículo indisponível')
-                raise Exception
-            if funcionario.bloqueio > 3:
-                self.registrar(veiculo, funcionario, 4)
-                self.__tela_emprestar.pop_mensagem('Acesso Bloqueado')  # raise erro
-                raise Exception
-            if funcionario.cargo == 'DIRETOR' or veiculo in funcionario.veiculos.values():
-                veiculo.emprestado = True
-                self.registrar(veiculo, funcionario, 0)
-                self.__tela_emprestar.pop_mensagem('Acesso permitido ao veiculo')
-            else:
-                self.registrar(veiculo, funcionario, 2)
-                funcionario.bloqueio += 1
-                self.__tela_emprestar.pop_mensagem('Não possui acesso ao veículo')
-        Exception:
-            pass
+                self.__tela_emprestar.pop_mensagem('Matrícula não existe')  # raise erro
+        else:
+            self.__tela_emprestar.pop_mensagem('veiculo não existe')
+        self.abrir_tela()
 
 
 
@@ -120,12 +118,12 @@ class ControlaEmprestimo(ControlaAbstract):
         pass
 
 
-
-        # filtro = dados[0]
-        # parametro = dados[1]
+        # registros = list(self.__registro_DAO.chamar_todos())
+        # filtro = botoes
+        # parametro = valores
         # registros_filtrados = []
         # if filtro == 3: #lista todos os registros
-        #     return self.__tela_emprestimo.listar_registros(self.__registros)
+        #     return self.tela_registro_lista()
         # elif filtro == 4: #voltar
         #     return None
         # else:

@@ -2,15 +2,27 @@ class InteiroInvalido(Exception):
     def __init__(self):
         super().__init__("O valor não é inteiro válido")
 
-class PlacaInvalida(Exception):
+class DadosVeiculoInvalidos(Exception):
     def __init__(self):
-        super().__init__("formato de placa invalido")
-        print("formato de placa invalido")
+        super().__init__("dados do veículo invalidos")
 
 class VeiculoJaCadastrado(Exception):
     def __init__(self):
         super().__init__("Veículo já está cadastrado")
 
-class VeiculoNaoCadastrado(Exception):
+class MatriculaNaoExiste(Exception):
     def __init__(self):
-        super().__init__("Veículo não está cadastrado")
+        super().__init__("Matrícula não existe")
+
+class NaoPossuiAcessoAoVeiculo(Exception):
+    def __init__(self):
+        super().__init__("Não possui acesso ao veículo")
+
+
+class VeiculoIndisponivel(Exception):
+    def __init__(self):
+        super().__init__("veículo indisponível")
+
+class AcessoBloqueado(Exception):
+    def __init__(self):
+        super().__init__("Acesso Bloqueado")

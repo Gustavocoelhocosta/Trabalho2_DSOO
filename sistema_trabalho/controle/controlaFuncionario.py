@@ -149,7 +149,7 @@ class ControlaFuncionario(ControlaAbstract):
 
 
     #preciso dessa função que busque o funcionario na DAO, retorna Funcionario
-   def chamar_funcionario(self, matricula):
+    def chamar_funcionario(self, matricula):
         pass
     #----------------------------------------------------------
 
