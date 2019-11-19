@@ -6,7 +6,6 @@ from sistema_trabalho.limite.Telas_emprestimo.tela_registro_filtros import TelaR
 from sistema_trabalho.limite.Telas_emprestimo.tela_registro_lista import TelaRegistroLista
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 from sistema_trabalho.entidade.registroDAO import Registro_DAO
-from sistema_trabalho.controle.Excecoes import *
 
 class ControlaEmprestimo(ControlaAbstract):
     def __init__(self, sistema):
@@ -55,18 +54,19 @@ class ControlaEmprestimo(ControlaAbstract):
                   None: self.voltar
                   }
         botao, valores = self.__tela_emprestimo.abrir()
-        print(botao)
         opcoes[botao]()
 
     # empresta os veiculos
     def emprestar_veiculo(self):
         veiculos = self.__sistema.controla_veiculo.listar_veiculos()
         botoes, valores = self.__tela_emprestar.abrir(veiculos)
+        if botoes == None or botoes == 'voltar':
+            return self.abrir_tela()
         try:
             matricula = int(valores['m'])
         except:
             self.__tela_emprestar.pop_mensagem('matricula deve ser um inteiro')
-            self.emprestar_veiculo()
+            self.abrir_tela()
         placa = valores['p'][0][0:7]
         print(placa)
         print(matricula)
@@ -100,16 +100,25 @@ class ControlaEmprestimo(ControlaAbstract):
     #devolve o veículo mutando o status de emprestado para disponivel e atualiza a quilometragem
     def devolver_veiculo(self):
         botoes, valores = self.__tela_devolver.abrir()
-        pass
+        if botoes == None or botoes == 'voltar':
+            return self.abrir_tela()
+        try:
+            veiculo = self.__sistema.controla_veiculo.chamar_veiculo(valores['pl'].upper())
+            if not veiculo.emprestado:
+                self.tela_emprestar.pop_mensagem('Veículo encontra-se na garagem')
+                return self.abrir_tela()
+            Km = int(valores[km])
+            veiculo.quilometragem_atual += Km
+            veiculo.emprestado = False
+            self.abrir_tela()
+            self.tela_emprestar.pop_mensagem('Veículo devolvido com sucesso')
+
+        except:
+            self.tela_emprestar.pop_mensagem('não foi possivel devolver o veículo, dados inconsistentes')
+            return self.abrir_tela()
 
 
-        # dados = self.__tela_emprestimo.devolver_veiculo()
-        # placa = dados[0]
-        # quilometros_rodados = dados[1]
-        # veiculo = self.__sistema.controla_veiculo.veiculos[placa]
-        # veiculo.quilometragem_atual += quilometros_rodados
-        # veiculo.emprestado = False
-        # self.abrir_tela()
+
 
     #cria um registro e armazena na lista registros
     def registrar(self, veiculo, funcionario, motivo):
@@ -120,6 +129,8 @@ class ControlaEmprestimo(ControlaAbstract):
     #lista os registros por filtros
     def registros(self):
         botoes, valores = self.__tela_registro_filtro.abrir()
+        if botoes == None or botoes == 'voltar':
+            return self.abrir_tela()
         pass
 
 

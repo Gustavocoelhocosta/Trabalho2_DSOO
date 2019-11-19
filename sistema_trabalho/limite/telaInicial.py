@@ -6,7 +6,7 @@ class TelaInicial(TelaAbstract):
     def __init__(self):
         self.__janela = None
         self.__dados_tela = {}
-
+        self.configurar()
 
     def configurar(self):
         layout = [
@@ -17,10 +17,8 @@ class TelaInicial(TelaAbstract):
         self.__janela = sg.Window('').Layout(layout)
 
     def abrir(self):
-        self.configurar()
         botoes, valores = self.__janela.Read()
         self.__dados_tela = botoes, valores
-        self.__janela.Close()
         return botoes, valores
 
     def fechar(self):

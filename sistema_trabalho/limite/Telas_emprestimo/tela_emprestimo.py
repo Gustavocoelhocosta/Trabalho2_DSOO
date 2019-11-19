@@ -25,6 +25,5 @@ class TelaEmprestimo(TelaAbstract):
         return botoes, valores
 
     def fechar(self):
-        print('fechar')
         self.__janela.Close()
 

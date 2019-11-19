@@ -6,20 +6,27 @@ class TelaRegistroFiltro(TelaAbstract):
     def __init__(self):
         self.__janela = None
         self.__dados_tela = {}
-        self.configurar()
 
     def configurar(self):
+        motivos = ['Acesso permitido ao veiculo',
+                   'Matrícula não existe',
+                   'Não possui acesso ao veículo',
+                   'Veículo indisponível',
+                   'Acesso Bloqueado']
         layout = [
                     [sg.Text('escolha o filtro do registro')],
-                    [sg.Submit('Todos', key=0, size=(15,1))],
-                    [sg.Submit('por plcaca', key=1, size=(15,1)), sg.InputText('digite a placa',size=(30,1))],
-                    [sg.Submit('por matrícula', key=2, size=(15,1)),sg.InputText('digite a matrícula',size=(30,1))],
-                    [sg.Submit('por motivo', key=3,size=(15,5)), sg.Listbox(values=['Acesso permitido ao veiculo', 'Matrícula não existe', 'Não possui acesso ao veículo', 'Veículo indisponível', 'Acesso Bloqueado'], size=(30,5))]
+                    [sg.Button('Todos', size=(15,1))],
+                    [sg.Button('por plcaca', size=(15,1)), sg.InputText('digite a placa',size=(30,1))],
+                    [sg.Button('por matrícula', size=(15,1)),sg.InputText('digite a matrícula',size=(30,1))],
+                    [sg.Button('por motivo',size=(15,5)), sg.Listbox(values=motivos, size=(30,5))],
+                    [sg.Button('voltar',size=(15,1))]
                  ]
         self.__janela = sg.Window('').Layout(layout)
 
     def abrir(self):
+        self.configurar()
         botoes, valores = self.__janela.Read()
+        self.__janela.Close()
         return botoes, valores
 
     def fechar(self):
