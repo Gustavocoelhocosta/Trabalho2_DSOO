@@ -15,7 +15,7 @@ class TelaEmprestar(TelaAbstract):
             [sg.Listbox(values=veiculos, size=(65, 10), key='p')],
             [sg.Button('emprestar', size=(12, 2)),sg.Button('voltar',size=(12,2))]
         ]
-        self.__janela = sg.Window('').Layout(layout)
+        self.__janela = sg.Window('Empréstimo').Layout(layout)
 
     def abrir(self, veiculos):
         self.configurar(veiculos)

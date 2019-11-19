@@ -14,7 +14,7 @@ class TelaRegistroLista(TelaAbstract):
             [sg.Listbox(values = registros, size=(65,10))],
             [sg.Exit('Fechar',size=(10,2))]
              ]
-        self.__janela = sg.Window('').Layout(layout)
+        self.__janela = sg.Window('Registros').Layout(layout)
 
     def abrir(self, registros):
         self.configurar(registros)

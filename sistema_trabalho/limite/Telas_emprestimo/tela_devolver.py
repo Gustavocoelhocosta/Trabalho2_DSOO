@@ -13,7 +13,7 @@ class TelaDevolver(TelaAbstract):
             [sg.Text('quilometragem rodada', size=(17,1)), sg.InputText(key='km')],
             [sg.Button('devolver', size=(12, 2)), sg.Button('voltar', size=(12, 2))]
                  ]
-        self.__janela = sg.Window('').Layout(layout)
+        self.__janela = sg.Window('Empréstimo').Layout(layout)
 
     def abrir(self):
         self.configurar()

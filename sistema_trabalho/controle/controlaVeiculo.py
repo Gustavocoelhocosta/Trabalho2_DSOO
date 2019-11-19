@@ -103,8 +103,18 @@ class ControlaVeiculo(ControlaAbstract):
     def listar_veiculos(self):
         veiculos = []
         for veiculo in self.__veiculo_DAO.chamar_todos():
-            veiculos.append(str(veiculo.placa) + ' - ' + str(veiculo.modelo) + ' - ' + str(veiculo.marca) + ' - ' + str(veiculo.ano) + ' - ' + str(veiculo.quilometragem_atual))
+            if veiculo.emprestado:
+                emprestado = 'INDISPONÍVEL'
+            else:
+                emprestado = 'DISPONÍVEL'
+            veiculos.append(str(veiculo.placa) + ' - '  + emprestado  + ' - ' + str(veiculo.modelo) + ' - ' + str(veiculo.marca) + ' - ' + str(veiculo.ano) + ' - ' + str(veiculo.quilometragem_atual))
         return veiculos
+
+    def listar_placas(self):
+        placas = []
+        for veiculo in self.__veiculo_DAO.chamar_todos():
+            placas.append(veiculo.placa)
+        return placas
 
     def voltar(self):
         return self.__sistema.chamar_tela_inicial()

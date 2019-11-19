@@ -17,7 +17,7 @@ class TelaIncluirVeiculo(TelaAbstract):
                 [sg.Text('Kilometragem', size=(15, 1)), sg.InputText(str(dados_veiculos['km']), key='quilometragem_atual')],
                 [sg.Submit('incluir'), sg.Cancel('Voltar')]
                 ]
-        self.__janela = sg.Window('').Layout(layout)
+        self.__janela = sg.Window('Veículos').Layout(layout)
 
     def abrir(self, dados_veiculo = None):
         if not dados_veiculo:
