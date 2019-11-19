@@ -1,6 +1,5 @@
-from sistema_trabalho.entidade.DAO import DAO
+from sistema_trabalho.percistencia.DAO import DAO
 from sistema_trabalho.entidade.veiculo import Veiculo
-import pickle
 
 
 class Veiculo_DAO(DAO):

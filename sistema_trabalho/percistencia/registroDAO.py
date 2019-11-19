@@ -1,4 +1,4 @@
-from sistema_trabalho.entidade.DAO import DAO
+from sistema_trabalho.percistencia.DAO import DAO
 from sistema_trabalho.entidade.registro import Registro
 
 

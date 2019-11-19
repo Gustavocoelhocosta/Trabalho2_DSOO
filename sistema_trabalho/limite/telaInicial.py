@@ -12,7 +12,8 @@ class TelaInicial(TelaAbstract):
         layout = [
             [sg.Button('cadastro veículos', size=(30,3))],
             [sg.Button('cadastro funcionarios', size=(30,3))],
-            [sg.Button('emprestimo veículos', size=(30,3))]
+            [sg.Button('emprestimo veículos', size=(30,3))],
+            [sg.Button('Fechar', button_color=('white','red'), size=(30, 3))]
         ]
         self.__janela = sg.Window('').Layout(layout)
 

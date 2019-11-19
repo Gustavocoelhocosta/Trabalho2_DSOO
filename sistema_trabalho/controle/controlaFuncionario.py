@@ -3,7 +3,7 @@ from sistema_trabalho.limite.Telas_funcionario.telaListaFuncionario import TelaL
 from sistema_trabalho.limite.Telas_funcionario.telaVeiculosPermitidos import TelaVeiculosPermitidos
 from sistema_trabalho.limite.Telas_funcionario.telaCadastraVeiculoNoFuncionario import TelaCadastraVeiculoNoFuncionario
 from sistema_trabalho.entidade.funcionario import Funcionario
-from sistema_trabalho.entidade.funcionarioDAO import FuncionarioDAO
+from sistema_trabalho.percistencia.funcionarioDAO import FuncionarioDAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 
 class ControlaFuncionario(ControlaAbstract):
@@ -40,15 +40,13 @@ class ControlaFuncionario(ControlaAbstract):
                   }
         if botoes in ['Voltar', None]:
             opcoes[botoes]()
-            self.abrir_tela()
         elif botoes == 'Novo':
             opcoes[botoes]()
         else:
             try:
                 opcoes[botoes](valores)
-                self.abrir_tela()
             except:
-                self.abrir_tela()
+                return self.abrir_tela()
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)

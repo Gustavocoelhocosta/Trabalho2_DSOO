@@ -30,6 +30,7 @@ class Sistema():
         opcoes = {'cadastro veículos': self.chamar_controla_veiculo,
                   'cadastro funcionarios': self.chamar_controla_funcionario,
                   'emprestimo veículos': self.chamar_controla_emprestimo,
+                  'Fechar': self.finalizar,
                   None: self.finalizar}
         botao, valores = self.__tela_inicial.abrir()
         return opcoes[botao]()

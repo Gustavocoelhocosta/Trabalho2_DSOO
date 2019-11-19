@@ -5,7 +5,7 @@ from sistema_trabalho.limite.Telas_emprestimo.tela_devolver import TelaDevolver
 from sistema_trabalho.limite.Telas_emprestimo.tela_registro_filtros import TelaRegistroFiltro
 from sistema_trabalho.limite.Telas_emprestimo.tela_registro_lista import TelaRegistroLista
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
-from sistema_trabalho.entidade.registroDAO import Registro_DAO
+from sistema_trabalho.percistencia.registroDAO import Registro_DAO
 
 class ControlaEmprestimo(ControlaAbstract):
     def __init__(self, sistema):
@@ -107,13 +107,13 @@ class ControlaEmprestimo(ControlaAbstract):
         if self.__sistema.controla_veiculo.chamar_veiculo(valores['pl'].upper()):
             veiculo = self.__sistema.controla_veiculo.chamar_veiculo(valores['pl'].upper())
             if not veiculo.emprestado:
-                self.tela_emprestar.pop_mensagem('Veículo encontra-se na garagem')
+                self.tela_emprestar.pop_mensagem('não foi possivel devolver o veículo, veículo encontra-se na garagem')
                 return self.devolver_veiculo()
             try:
                 Km = int(valores['km'])
             except:
-                self.tela_emprestar.pop_mensagem('não foi possivel devolver o veículo, dados inconsistentes')
-                return self.self.devolver_veiculo()
+                self.tela_emprestar.pop_mensagem('Quilometragem deve ser um inteiro')
+                return self.devolver_veiculo()
         else:
             self.tela_emprestar.pop_mensagem('não foi possivel devolver o veículo, dados inconsistentes')
             return self.devolver_veiculo()

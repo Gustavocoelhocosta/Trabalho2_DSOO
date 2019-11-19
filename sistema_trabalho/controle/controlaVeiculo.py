@@ -1,7 +1,7 @@
 from sistema_trabalho.limite.Telas_veiculo.telaCadastraoVeiculo import TelaIncluirVeiculo
 from sistema_trabalho.limite.Telas_veiculo.telaListaVeiculo import TelaListaVeiculo
 from sistema_trabalho.entidade.veiculo import Veiculo
-from sistema_trabalho.entidade.veiculoDAO import Veiculo_DAO
+from sistema_trabalho.percistencia.veiculoDAO import Veiculo_DAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
 from sistema_trabalho.excecoes.veiculoJaCadastrado import VeiculoJaCadastrado
 import re
@@ -29,9 +29,12 @@ class ControlaVeiculo(ControlaAbstract):
                   }
         if botoes in ['Novo', 'Voltar', None]:
             opcoes[botoes]()
-        else:
-            valores = valores[0][0]
+        elif botoes == 'Alterar' and valores['dados_veiculo']:
+            valores = valores['dados_veiculo'][0]
             opcoes[botoes](valores)
+        else:
+            self.__tela_listar_veiculo.pop_mensagem('selecione um veículo para alterar')
+            return self.abrir_tela()
 
     def alterar(self, placa):
         placa = placa[0:7]
@@ -66,6 +69,7 @@ class ControlaVeiculo(ControlaAbstract):
     def incluir(self):
         botao, dados_veiculo = self.__tela_incluir_veiculo.abrir()
         if self.veiculo_DAO.chamar(dados_veiculo['placa'].upper()):
+            VeiculoJaCadastrado()
             self.__tela_incluir_veiculo.pop_mensagem('veículo já cadastrado')
         else:
             try:

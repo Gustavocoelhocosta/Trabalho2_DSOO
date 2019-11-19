@@ -1,6 +1,6 @@
-from sistema_trabalho.entidade.DAO import DAO
+from sistema_trabalho.percistencia.DAO import DAO
 from sistema_trabalho.entidade.funcionario import Funcionario
-import pickle
+
 
 class FuncionarioDAO(DAO):
     def __init__(self):
