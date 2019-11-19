@@ -31,6 +31,7 @@ class ControlaFuncionario(ControlaAbstract):
                 funcionario.cargo
                 )
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
+        print(botoes, len(valores[0]))
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
@@ -38,8 +39,11 @@ class ControlaFuncionario(ControlaAbstract):
                   'Voltar': self.voltar,
                   None: self.voltar}
         if botoes in ['Alterar', 'Excluir', 'Veículos permitidos']:
-            opcoes[botoes](valores)
-            self.abrir_tela()
+            try:
+                opcoes[botoes](valores)
+                self.abrir_tela()
+            except:
+                self.abrir_tela()
         else:
             opcoes[botoes]()
             self.abrir_tela()
@@ -106,7 +110,7 @@ class ControlaFuncionario(ControlaAbstract):
         self.abrir_tela()
 
     def listar(self):
-        self.__tela.listar_funcionarios(self.__funcionarios)
+        self.__funcionario_DAO.chamar_todos()
 
     def veiculos_funcionario(self, dados):
         funcionario = self.__funcionario_DAO.chamar(self.retorna_matricula(dados))
@@ -129,7 +133,7 @@ class ControlaFuncionario(ControlaAbstract):
         if botoes == 'Cadastrar':
             placa = valores[0][0].split(' - ')[0]
             funcionario = self.__funcionario_DAO.chamar(matricula)
-            veiculo = self.__sistema.controla_veiculo.retorna_veiculo_pela_placa(placa)
+            veiculo = self.__sistema.controla_veiculo.chamar_veiculo(placa)
             funcionario.veiculos[placa] = veiculo
             self.__funcionario_DAO.salvar(funcionario)
 
@@ -146,18 +150,10 @@ class ControlaFuncionario(ControlaAbstract):
         return self.__funcionario_DAO.chamar(matricula).veiculos
 
 
-
-
     #preciso dessa função que busque o funcionario na DAO, retorna Funcionario
     def chamar_funcionario(self, matricula):
-        pass
+        return self.__funcionario_DAO.chamar(matricula)
     #----------------------------------------------------------
-
-    def buscar_funcionario_matricula(self, matricula):
-        if matricula in self.__funcionarios:
-            return self.__funcionarios[matricula]
-        else:
-            return None
 
     def voltar(self):
         self.__sistema.chamar_tela_inicial()
