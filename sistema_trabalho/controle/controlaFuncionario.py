@@ -31,22 +31,24 @@ class ControlaFuncionario(ControlaAbstract):
                 funcionario.cargo
                 )
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
-        print(botoes, len(valores[0]))
+        #print(botoes, len(valores[0]))
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
                   'Veículos permitidos': self.veiculos_funcionario,
                   'Voltar': self.voltar,
                   None: self.voltar}
-        if botoes in ['Alterar', 'Excluir', 'Veículos permitidos']:
+        if botoes in ['Voltar', None]:
+            opcoes[botoes]()
+            self.abrir_tela()
+        elif botoes == 'Novo':
+            opcoes[botoes]()
+        else:
             try:
                 opcoes[botoes](valores)
                 self.abrir_tela()
             except:
                 self.abrir_tela()
-        else:
-            opcoes[botoes]()
-            self.abrir_tela()
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
