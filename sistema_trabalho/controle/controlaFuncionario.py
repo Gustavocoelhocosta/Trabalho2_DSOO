@@ -31,13 +31,14 @@ class ControlaFuncionario(ControlaAbstract):
                 funcionario.cargo
                 )
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
-        #print(botoes, len(valores[0]))
+        print(botoes, valores)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
                   'Veículos permitidos': self.veiculos_funcionario,
                   'Voltar': self.voltar,
-                  None: self.voltar}
+                  None: self.voltar
+                  }
         if botoes in ['Voltar', None]:
             opcoes[botoes]()
             self.abrir_tela()
@@ -116,19 +117,25 @@ class ControlaFuncionario(ControlaAbstract):
 
     def veiculos_funcionario(self, dados):
         funcionario = self.__funcionario_DAO.chamar(self.retorna_matricula(dados))
-        botoes, valores = self.__tela_veiculos_permitidos.abrir(funcionario.veiculos)
-        print(botoes, valores)
-        opcoes = {'Novo': self.cadastrar_veiculo_no_funcionario,
-                  'Excluir': self.excluir_veiculo_do_funcionario,
-                  'Voltar': self.abrir_tela}
-        if botoes == 'Novo':
-            opcoes[botoes](funcionario.matricula)
-            self.abrir_tela()
-        elif botoes == 'Excluir':
-            opcoes[botoes](funcionario.matricula, valores)
+        if funcionario.cargo == 'Direção':
+            botoes, valores = self.__tela_veiculos_permitidos.abrir(self.__sistema.controla_veiculo.listar_veiculos())
+            if botoes == 'Novo':
+                self.__tela_veiculos_permitidos.pop_mensagem('Funcionários com cargo de Direção têm permição à todos os veículos')
+            elif botoes == 'Excluir':
+                self.__tela_veiculos_permitidos.pop_mensagem('Não é possível excluir, funcionários com cargo de Direção tem permição à todos os veículos' )
         else:
-            opcoes[botoes]()
-            self.abrir_tela()
+            botoes, valores = self.__tela_veiculos_permitidos.abrir(self.listar_veiculos_permitidos(funcionario.matricula))
+            opcoes = {'Novo': self.cadastrar_veiculo_no_funcionario,
+                      'Excluir': self.excluir_veiculo_do_funcionario,
+                      'Voltar': self.abrir_tela}
+            if botoes == 'Novo':
+                opcoes[botoes](funcionario.matricula)
+                self.abrir_tela()
+            elif botoes == 'Excluir':
+                opcoes[botoes](funcionario.matricula, valores)
+            else:
+                opcoes[botoes]()
+                self.abrir_tela()
 
     def cadastrar_veiculo_no_funcionario(self, matricula):
         botoes, valores = self.__tela_cadastrar_veiculo_no_funcionario.abrir(self.__sistema.controla_veiculo.listar_veiculos())
@@ -137,6 +144,7 @@ class ControlaFuncionario(ControlaAbstract):
             funcionario = self.__funcionario_DAO.chamar(matricula)
             veiculo = self.__sistema.controla_veiculo.chamar_veiculo(placa)
             funcionario.veiculos[placa] = veiculo
+            print(funcionario.veiculos[placa].placa)
             self.__funcionario_DAO.salvar(funcionario)
 
 
@@ -149,7 +157,15 @@ class ControlaFuncionario(ControlaAbstract):
 
 
     def listar_veiculos_permitidos(self, matricula):
-        return self.__funcionario_DAO.chamar(matricula).veiculos
+        veiculos_permitidos = list()
+        for veiculo in self.__funcionario_DAO.chamar(matricula).veiculos.values():
+            veiculos_permitidos.append(
+                str(veiculo.placa) + ' - ' +
+                str(veiculo.modelo) + ' - ' +
+                str(veiculo.marca) + ' - ' +
+                str(veiculo.ano) + ' - ' +
+                str(veiculo.quilometragem_atual))
+        return veiculos_permitidos
 
 
     #preciso dessa função que busque o funcionario na DAO, retorna Funcionario
