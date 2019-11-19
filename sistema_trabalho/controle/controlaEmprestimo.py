@@ -99,7 +99,8 @@ class ControlaEmprestimo(ControlaAbstract):
 
     #devolve o veículo mutando o status de emprestado para disponivel e atualiza a quilometragem
     def devolver_veiculo(self):
-        botoes, valores = self.__tela_devolver.abrir()
+        placas = self.__sistema.controla_veiculo.listar_placas()
+        botoes, valores = self.__tela_devolver.abrir(placas)
         if botoes == None or botoes == 'voltar':
             return self.abrir_tela()
 

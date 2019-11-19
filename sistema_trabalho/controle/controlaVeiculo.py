@@ -3,8 +3,8 @@ from sistema_trabalho.limite.Telas_veiculo.telaListaVeiculo import TelaListaVeic
 from sistema_trabalho.entidade.veiculo import Veiculo
 from sistema_trabalho.entidade.veiculoDAO import Veiculo_DAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
+from sistema_trabalho.excecoes.veiculoJaCadastrado import VeiculoJaCadastrado
 import re
-# from sistema_trabalho.controle.Excecoes import *
 
 
 class ControlaVeiculo(ControlaAbstract):
@@ -79,7 +79,7 @@ class ControlaVeiculo(ControlaAbstract):
                 veiculo = Veiculo(placa, modelo, marca, ano, km)
                 self.__veiculo_DAO.salvar(veiculo)
                 self.__tela_incluir_veiculo.pop_mensagem('veiculo cadastrado com sucesso')
-            except Exception:
+            except:
                 self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
         self.abrir_tela()
 
