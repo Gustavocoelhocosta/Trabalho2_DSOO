@@ -31,7 +31,6 @@ class ControlaFuncionario(ControlaAbstract):
                 funcionario.cargo
                 )
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
-        print(botoes, valores)
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
@@ -144,14 +143,13 @@ class ControlaFuncionario(ControlaAbstract):
             funcionario = self.__funcionario_DAO.chamar(matricula)
             veiculo = self.__sistema.controla_veiculo.chamar_veiculo(placa)
             funcionario.veiculos[placa] = veiculo
-            print(funcionario.veiculos[placa].placa)
             self.__funcionario_DAO.salvar(funcionario)
 
 
     def excluir_veiculo_do_funcionario(self, matricula, valores):
         funcionario = self.__funcionario_DAO.chamar(matricula)
         placa = valores[0][0]
-        del(funcionario.veiculos[placa])
+        del(funcionario.veiculos[placa.split(' - ')[0]])
         self.__funcionario_DAO.salvar(funcionario)
         self.abrir_tela()
 
