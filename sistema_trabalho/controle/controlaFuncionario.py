@@ -45,7 +45,6 @@ class ControlaFuncionario(ControlaAbstract):
             self.__tela_listar_funcionarios.pop_mensagem('Selecione um funcionário')
             self.abrir_tela()
         else:
-            print(botoes, valores)
             opcoes[botoes](valores)
 
 
