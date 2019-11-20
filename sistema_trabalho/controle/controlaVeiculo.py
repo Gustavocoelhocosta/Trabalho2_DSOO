@@ -1,4 +1,4 @@
-from sistema_trabalho.limite.Telas_veiculo.telaCadastraoVeiculo import TelaIncluirVeiculo
+from sistema_trabalho.limite.Telas_veiculo.telaIncluirVeiculo import TelaIncluirVeiculo
 from sistema_trabalho.limite.Telas_veiculo.telaListaVeiculo import TelaListaVeiculo
 from sistema_trabalho.entidade.veiculo import Veiculo
 from sistema_trabalho.percistencia.veiculoDAO import Veiculo_DAO
