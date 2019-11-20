@@ -5,6 +5,8 @@ from sistema_trabalho.limite.Telas_funcionario.telaCadastraVeiculoNoFuncionario 
 from sistema_trabalho.entidade.funcionario import Funcionario
 from sistema_trabalho.percistencia.funcionarioDAO import FuncionarioDAO
 from sistema_trabalho.controle.controlaAbstract import ControlaAbstract
+from sistema_trabalho.excecoes.dadosIncorretos import DadosIncorretos
+import re
 
 class ControlaFuncionario(ControlaAbstract):
     def __init__(self, sistema):
@@ -50,28 +52,34 @@ class ControlaFuncionario(ControlaAbstract):
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
-        if dados_funcionario['matricula'] == '' or not dados_funcionario['matricula'].isdigit():
-            self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
-            self.abrir_tela()
-        elif self.__funcionario_DAO.chamar(int(dados_funcionario['matricula'])):
-            self.__tela_cadastrar_funcionario.pop_mensagem('Já existe um funcionário com a matrícula digitada')
+        if botoes in ['Voltar', None]:
             self.abrir_tela()
         else:
-            try:
-                matricula = int(dados_funcionario['matricula'])
-                if dados_funcionario['nome'] is not '' and dados_funcionario['matricula'] is not ' ':
-                    nome = dados_funcionario['nome'].capitalize()
-                if dados_funcionario['nascimento'].isdigit() and dados_funcionario['telefone'].isdigit():
-                    nascimento = dados_funcionario['nascimento']
-                    telefone = dados_funcionario['telefone']
-                if dados_funcionario['cargo'] in self.__cargos:
-                    cargo = dados_funcionario['cargo']
-                self.__funcionario_DAO.salvar(Funcionario(matricula, nome, nascimento, telefone, cargo))
-                self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário cadastrado com sucesso!')
-                self.abrir_tela()
-            except:
+            if dados_funcionario['matricula'] == '' or not dados_funcionario['matricula'].isdigit():
                 self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
                 self.abrir_tela()
+            elif self.__funcionario_DAO.chamar(int(dados_funcionario['matricula'])):
+                self.__tela_cadastrar_funcionario.pop_mensagem('Já existe um funcionário com a matrícula digitada')
+                self.abrir_tela()
+            else:
+                try:
+                    matricula = int(dados_funcionario['matricula'])
+                    if dados_funcionario['nome'] is not '' and len(re.findall('[a-zA-Z]', dados_funcionario['nome'])) >= 1:
+                        nome = dados_funcionario['nome'].capitalize()
+                    if dados_funcionario['nascimento'].isdigit() and dados_funcionario['telefone'].isdigit():
+                        nascimento = dados_funcionario['nascimento']
+                        telefone = dados_funcionario['telefone']
+                    if dados_funcionario['cargo'] in self.__cargos:
+                        cargo = dados_funcionario['cargo']
+                    if not (matricula and nome and nascimento and telefone and cargo):
+                        raise Exception
+                except Exception:
+                    self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
+                    self.abrir_tela()
+                else:
+                    self.__funcionario_DAO.salvar(Funcionario(matricula, nome, nascimento, telefone, cargo))
+                    self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário cadastrado com sucesso!')
+                    self.abrir_tela()
 
     def alterar(self, dados):
         matricula = self.retorna_matricula(dados)
@@ -84,27 +92,32 @@ class ControlaFuncionario(ControlaAbstract):
                  'cargo': funcionario.cargo
                  }
         botoes, valores = self.__tela_cadastrar_funcionario.abrir(dados, self.__cargos)
-
         if botoes == 'Incluir':
             try:
                 matricula_alterada = int(valores['matricula'])
-                if valores['nome'] is not '' and valores['matricula'] is not ' ':
+                if valores['nome'] is not '' and len(re.findall('[a-zA-Z]', valores['nome'])) >= 1:
+                    print(re.findall('[0-9]', valores['nome']))
                     nome = valores['nome'].capitalize()
                 if valores['nascimento'].isdigit() and valores['telefone'].isdigit():
                     nascimento = valores['nascimento']
                     telefone = valores['telefone']
                 if valores['cargo'] in self.__cargos:
                     cargo = valores['cargo']
+                if not (matricula and nome and nascimento and telefone and cargo):
+                    raise DadosIncorretos
+            except DadosIncorretos:
+                self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não alterado!')
+                self.abrir_tela()
+            else:
                 self.__funcionario_DAO.remover(matricula)
                 self.__funcionario_DAO.salvar(Funcionario(matricula_alterada, nome, nascimento, telefone, cargo))
                 funcionario_alterado = self.__funcionario_DAO.chamar(matricula_alterada)
                 funcionario_alterado.veiculos = veiculos_permitidos
                 self.__funcionario_DAO.salvar(funcionario_alterado)
                 self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário alterado com sucesso!')
-            except:
-                self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não alterado!')
                 self.abrir_tela()
-        else:
+
+        elif botoes == 'Voltar':
             self.abrir_tela()
 
 
