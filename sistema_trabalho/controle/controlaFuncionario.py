@@ -31,6 +31,7 @@ class ControlaFuncionario(ControlaAbstract):
                 funcionario.cargo
                 )
         botoes, valores = self.__tela_listar_funcionarios.abrir(funcionarios)
+        self.listar_matriculas()
         opcoes = {'Novo': self.incluir,
                   'Excluir': self.excluir,
                   'Alterar': self.alterar,
@@ -38,15 +39,15 @@ class ControlaFuncionario(ControlaAbstract):
                   'Voltar': self.voltar,
                   None: self.voltar
                   }
-        if botoes in ['Voltar', None]:
+        if botoes in ['Novo', 'Voltar', None]:
             opcoes[botoes]()
-        elif botoes == 'Novo':
-            opcoes[botoes]()
+        elif botoes in ['Excluir', 'Alterar', 'Veículos permitidos'] and len(valores[0]) == 0:
+            self.__tela_listar_funcionarios.pop_mensagem('Selecione um funcionário')
+            self.abrir_tela()
         else:
-            try:
-                opcoes[botoes](valores)
-            except:
-                return self.abrir_tela()
+            print(botoes, valores)
+            opcoes[botoes](valores)
+
 
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
@@ -55,6 +56,7 @@ class ControlaFuncionario(ControlaAbstract):
             self.abrir_tela()
         elif self.__funcionario_DAO.chamar(int(dados_funcionario['matricula'])):
             self.__tela_cadastrar_funcionario.pop_mensagem('Já existe um funcionário com a matrícula digitada')
+            self.abrir_tela()
         else:
             try:
                 matricula = int(dados_funcionario['matricula'])
@@ -67,6 +69,7 @@ class ControlaFuncionario(ControlaAbstract):
                     cargo = dados_funcionario['cargo']
                 self.__funcionario_DAO.salvar(Funcionario(matricula, nome, nascimento, telefone, cargo))
                 self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário cadastrado com sucesso!')
+                self.abrir_tela()
             except:
                 self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não cadastrado!')
                 self.abrir_tela()
@@ -102,6 +105,8 @@ class ControlaFuncionario(ControlaAbstract):
             except:
                 self.__tela_cadastrar_funcionario.pop_mensagem('Dados incorretos, funcionário não alterado!')
                 self.abrir_tela()
+        else:
+            self.abrir_tela()
 
 
     def excluir(self, dados):
@@ -118,8 +123,10 @@ class ControlaFuncionario(ControlaAbstract):
             botoes, valores = self.__tela_veiculos_permitidos.abrir(self.__sistema.controla_veiculo.listar_veiculos())
             if botoes == 'Novo':
                 self.__tela_veiculos_permitidos.pop_mensagem('Funcionários com cargo de Direção têm permição à todos os veículos')
+                self.abrir_tela()
             elif botoes == 'Excluir':
                 self.__tela_veiculos_permitidos.pop_mensagem('Não é possível excluir, funcionários com cargo de Direção tem permição à todos os veículos' )
+                self.abrir_tela()
         else:
             botoes, valores = self.__tela_veiculos_permitidos.abrir(self.listar_veiculos_permitidos(funcionario.matricula))
             opcoes = {'Novo': self.cadastrar_veiculo_no_funcionario,
@@ -175,3 +182,15 @@ class ControlaFuncionario(ControlaAbstract):
     def retorna_matricula(self, dados):
         lista_dados = dados[0][0].split('-')
         return int(lista_dados[0])
+
+    def listar_matriculas(self):
+        lista_de_matriculas = list()
+        for funcionario in self.__funcionario_DAO.chamar_todos():
+            lista_de_matriculas.append(funcionario.matricula)
+        return sorted(lista_de_matriculas)
+
+    def excluir_veiculos_todos(self, placa):
+        for funcionario in self.__funcionario_DAO.chamar_todos():
+            if placa in funcionario.veiculos:
+                del funcionario.veiculos[placa]
+                self.__funcionario_DAO.salvar(funcionario)
