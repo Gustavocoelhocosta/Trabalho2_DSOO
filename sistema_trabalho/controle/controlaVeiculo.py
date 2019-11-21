@@ -32,8 +32,11 @@ class ControlaVeiculo(ControlaAbstract):
         elif botoes == 'Alterar' and valores['dados_veiculo']:
             valores = valores['dados_veiculo'][0]
             opcoes[botoes](valores)
+        elif botoes == 'Excluir' and valores['dados_veiculo']:
+            valores = valores['dados_veiculo'][0]
+            opcoes[botoes](valores)
         else:
-            self.__tela_listar_veiculo.pop_mensagem('selecione um veículo para alterar')
+            self.__tela_listar_veiculo.pop_mensagem('selecione um veículo')
             return self.abrir_tela()
 
     def alterar(self, placa):
@@ -49,16 +52,16 @@ class ControlaVeiculo(ControlaAbstract):
         botoes, valores = self.__tela_incluir_veiculo.abrir(dados_veiculo)
         dados_veiculo_alterado = valores
         try:
-            placa = self.valida_placa(dados_veiculo_alterado['placa'].upper())
+            placa_alterada = self.valida_placa(dados_veiculo_alterado['placa'].upper())
             modelo = dados_veiculo_alterado['modelo'].upper()
             marca = dados_veiculo_alterado['marca'].upper()
             ano = int(dados_veiculo_alterado['ano'])
             km = int(dados_veiculo_alterado['quilometragem_atual'])
-            if not (placa and modelo and marca and ano and km):
+            if not (placa_alterada and modelo and marca and ano and km):
                 raise Exception
-            if placa != valores['placa']:
+            if placa != placa_alterada:
                 self.__veiculo_DAO.remover(placa)
-            veiculo_alterado = Veiculo(placa, modelo, marca, ano, km)
+            veiculo_alterado = Veiculo(placa2, modelo, marca, ano, km)
             self.__veiculo_DAO.salvar(veiculo_alterado)
             self.abrir_tela()
         except Exception:

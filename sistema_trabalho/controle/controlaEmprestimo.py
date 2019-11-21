@@ -136,8 +136,8 @@ class ControlaEmprestimo(ControlaAbstract):
     #lista os registros por filtros
     def registros(self):
         placas = self.__sistema.controla_veiculo.listar_placas()
-        botoes, valores = self.__tela_registro_filtro.abrir(placas)
-        print(botoes)
+        matriculas = self.__sistema.controla_funcionario.listar_matriculas()
+        botoes, valores = self.__tela_registro_filtro.abrir(placas, matriculas)
         if botoes == None or botoes == 'voltar':
             return self.abrir_tela()
         else:
@@ -153,7 +153,7 @@ class ControlaEmprestimo(ControlaAbstract):
                 for registro in self.__registro_DAO.chamar_todos():
                     if registro.motivo == valores['motivo']:
                         registros_filtrados.append(self.formatar_registro(registro))
-            elif botoes == 'por matricula':
+            elif botoes == 'por matrícula':
                 for registro in self.__registro_DAO.chamar_todos():
                     if registro.funcionario:
                         if registro.funcionario.matricula == valores['matricula']:

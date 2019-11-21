@@ -8,7 +8,7 @@ class Registro_DAO(DAO):
 
     def salvar(self, registro: Registro):
         if isinstance(registro,Registro) and registro is not None:
-            super().salvar(registro.veiculo.placa, registro)
+            super().salvar(registro.data_hora, registro)
 
     def chamar(self, placa):
         return super().chamar(placa)
