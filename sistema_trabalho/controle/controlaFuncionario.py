@@ -49,7 +49,6 @@ class ControlaFuncionario(ControlaAbstract):
         else:
             opcoes[botoes](valores)
 
-
     def incluir(self):
         botoes, dados_funcionario = self.__tela_cadastrar_funcionario.abrir(None, self.__cargos)
         if botoes in ['Voltar', None]:
@@ -120,7 +119,6 @@ class ControlaFuncionario(ControlaAbstract):
         elif botoes == 'Voltar':
             self.abrir_tela()
 
-
     def excluir(self, dados):
         self.__funcionario_DAO.remover(self.retorna_matricula(dados))
         self.__tela_cadastrar_funcionario.pop_mensagem('Funcionário excluído com sucesso!')
@@ -156,7 +154,6 @@ class ControlaFuncionario(ControlaAbstract):
             else:
                 opcoes[botoes]()
 
-
     def cadastrar_veiculo_no_funcionario(self, matricula):
         botoes, valores = self.__tela_cadastrar_veiculo_no_funcionario.abrir(self.__sistema.controla_veiculo.listar_veiculos())
         if botoes == 'Cadastrar':
@@ -167,7 +164,6 @@ class ControlaFuncionario(ControlaAbstract):
             self.__funcionario_DAO.salvar(funcionario)
             self.__tela_cadastrar_veiculo_no_funcionario.pop_mensagem('Veículo cadastrado com sucesso!')
 
-
     def excluir_veiculo_do_funcionario(self, matricula, valores):
         funcionario = self.__funcionario_DAO.chamar(matricula)
         placa = valores[0][0]
@@ -175,7 +171,6 @@ class ControlaFuncionario(ControlaAbstract):
         self.__funcionario_DAO.salvar(funcionario)
         self.__tela_veiculos_permitidos.pop_mensagem('Veículo excluído com sucesso!')
         self.abrir_tela()
-
 
     def listar_veiculos_permitidos(self, matricula):
         veiculos_permitidos = list()
@@ -188,11 +183,8 @@ class ControlaFuncionario(ControlaAbstract):
                 str(veiculo.quilometragem_atual))
         return veiculos_permitidos
 
-
-    #preciso dessa função que busque o funcionario na DAO, retorna Funcionario
     def chamar_funcionario(self, matricula):
         return self.__funcionario_DAO.chamar(matricula)
-    #----------------------------------------------------------
 
     def voltar(self):
         self.__sistema.chamar_tela_inicial()

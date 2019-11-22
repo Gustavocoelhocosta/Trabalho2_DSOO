@@ -1,7 +1,8 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 import pickle
 
 class DAO(ABC):
+    @abstractmethod
     def __init__(self, datasource=''):
         self.__datasource = datasource
         self.__object_cache = {}

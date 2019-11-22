@@ -25,4 +25,3 @@ class TelaRegistroLista(TelaAbstract):
 
     def fechar(self):
         self.__janela.Close()
-

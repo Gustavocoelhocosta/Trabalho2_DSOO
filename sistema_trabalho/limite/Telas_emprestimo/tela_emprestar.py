@@ -25,4 +25,3 @@ class TelaEmprestar(TelaAbstract):
 
     def fechar(self):
         self.__janela.Close()
-

@@ -1,15 +1,18 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 
 class ControlaAbstract(ABC):
+    @abstractmethod
+    def __init__(self):
+        pass
 
-    @abstractclassmethod
+    @abstractmethod
     def abrir_tela(self):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def incluir(self):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def excluir(self):
         pass

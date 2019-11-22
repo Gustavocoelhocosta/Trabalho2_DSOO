@@ -51,23 +51,26 @@ class ControlaVeiculo(ControlaAbstract):
                         }
         botoes, valores = self.__tela_incluir_veiculo.abrir(dados_veiculo)
         dados_veiculo_alterado = valores
-        try:
-            placa_alterada = self.valida_placa(dados_veiculo_alterado['placa'].upper())
-            modelo = dados_veiculo_alterado['modelo'].upper()
-            marca = dados_veiculo_alterado['marca'].upper()
-            ano = int(dados_veiculo_alterado['ano'])
-            km = int(dados_veiculo_alterado['quilometragem_atual'])
-            if not (placa_alterada and modelo and marca and ano and km):
-                raise Exception
-            if placa != placa_alterada:
-                self.__veiculo_DAO.remover(placa)
-            veiculo_alterado = Veiculo(placa2, modelo, marca, ano, km)
-            self.__veiculo_DAO.salvar(veiculo_alterado)
+        if botoes == 'incluir':
+            try:
+                placa_alterada = self.valida_placa(dados_veiculo_alterado['placa'].upper())
+                modelo = dados_veiculo_alterado['modelo'].upper()
+                marca = dados_veiculo_alterado['marca'].upper()
+                ano = int(dados_veiculo_alterado['ano'])
+                km = int(dados_veiculo_alterado['quilometragem_atual'])
+                if not (placa_alterada and modelo and marca and ano and km):
+                    raise Exception
+                if placa != placa_alterada:
+                    self.__veiculo_DAO.remover(placa)
+                veiculo_alterado = Veiculo(placa_alterada, modelo, marca, ano, km)
+                self.__veiculo_DAO.salvar(veiculo_alterado)
+                self.__tela_incluir_veiculo.pop_mensagem('Veículo alterado com sucesso!')
+                self.abrir_tela()
+            except Exception:
+                self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
+                self.abrir_tela()
+        else:
             self.abrir_tela()
-        except Exception:
-            self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
-            self.abrir_tela()
-
 
     def incluir(self):
         botao, dados_veiculo = self.__tela_incluir_veiculo.abrir()
@@ -89,7 +92,6 @@ class ControlaVeiculo(ControlaAbstract):
             except:
                 self.__tela_incluir_veiculo.pop_mensagem('Veículo não cadastrado, dados incompletos ou incompativeis')
         self.abrir_tela()
-
 
     def excluir(self, placa):
         placa = placa[0:7]
