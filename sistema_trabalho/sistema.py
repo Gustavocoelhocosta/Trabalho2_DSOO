@@ -47,8 +47,8 @@ class Sistema():
     def finalizar(self):
         return exit(0)
 
-
 s = Sistema()
 s.chamar_tela_inicial()
+
 
 

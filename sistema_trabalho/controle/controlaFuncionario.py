@@ -143,15 +143,19 @@ class ControlaFuncionario(ControlaAbstract):
             botoes, valores = self.__tela_veiculos_permitidos.abrir(self.listar_veiculos_permitidos(funcionario.matricula))
             opcoes = {'Novo': self.cadastrar_veiculo_no_funcionario,
                       'Excluir': self.excluir_veiculo_do_funcionario,
-                      'Voltar': self.abrir_tela}
+                      'Voltar': self.abrir_tela,
+                      None: self.abrir_tela}
             if botoes == 'Novo':
                 opcoes[botoes](funcionario.matricula)
                 self.abrir_tela()
-            elif botoes == 'Excluir':
+            elif botoes == 'Excluir' and len(valores[0]) == 1:
                 opcoes[botoes](funcionario.matricula, valores)
+            elif botoes == 'Excluir' and len(valores[0]) == 0:
+                self.__tela_veiculos_permitidos.pop_mensagem('Selecione um veículo para excluir.')
+                self.veiculos_funcionario(dados)
             else:
                 opcoes[botoes]()
-                self.abrir_tela()
+
 
     def cadastrar_veiculo_no_funcionario(self, matricula):
         botoes, valores = self.__tela_cadastrar_veiculo_no_funcionario.abrir(self.__sistema.controla_veiculo.listar_veiculos())
@@ -161,6 +165,7 @@ class ControlaFuncionario(ControlaAbstract):
             veiculo = self.__sistema.controla_veiculo.chamar_veiculo(placa)
             funcionario.veiculos[placa] = veiculo
             self.__funcionario_DAO.salvar(funcionario)
+            self.__tela_cadastrar_veiculo_no_funcionario.pop_mensagem('Veículo cadastrado com sucesso!')
 
 
     def excluir_veiculo_do_funcionario(self, matricula, valores):
@@ -168,6 +173,7 @@ class ControlaFuncionario(ControlaAbstract):
         placa = valores[0][0]
         del(funcionario.veiculos[placa.split(' - ')[0]])
         self.__funcionario_DAO.salvar(funcionario)
+        self.__tela_veiculos_permitidos.pop_mensagem('Veículo excluído com sucesso!')
         self.abrir_tela()
 
 
