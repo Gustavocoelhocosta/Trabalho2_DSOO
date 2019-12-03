@@ -95,7 +95,7 @@ class ControlaFuncionario(ControlaAbstract):
             try:
                 matricula_alterada = int(valores['matricula'])
                 if valores['nome'] is not '' and len(re.findall('[a-zA-Z]', valores['nome'])) >= 1:
-                    print(re.findall('[0-9]', valores['nome']))
+                    # print(re.findall('[0-9]', valores['nome']))
                     nome = valores['nome'].capitalize()
                 if valores['nascimento'].isdigit() and valores['telefone'].isdigit():
                     nascimento = valores['nascimento']
